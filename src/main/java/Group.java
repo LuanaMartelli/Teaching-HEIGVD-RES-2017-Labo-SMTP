@@ -12,7 +12,7 @@ import java.util.List;
  * People are read from a file
  */
 public class Group {
-    public static final int NB_GROUP = 2;
+    public static final int NB_GROUP = 1;
 
     private List<Person> listOfPersons;
 

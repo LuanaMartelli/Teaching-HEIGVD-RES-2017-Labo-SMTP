@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -33,6 +32,11 @@ public class Prank {
             bound = listPeople.size();
             index = random.nextInt(bound);
             listPeople.remove(index);
+        }
+
+        if (listPeople.size() < 3) {
+            System.out.println("Not enough people in group !!!");
+            System.exit(0);
         }
 
         bound = listPeople.size();
