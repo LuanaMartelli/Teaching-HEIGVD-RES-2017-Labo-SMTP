@@ -12,8 +12,7 @@ import java.util.List;
  * People are read from a file
  */
 public class Group {
-
-    public static int group_size = 3;
+    public static final int NB_GROUP = 2;
 
     private List<Person> listOfPersons;
 
@@ -30,10 +29,8 @@ public class Group {
     public void readFile() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("src/main/data/victims.utf8"));
         String line;
-        int index = 0;
-        while (index < group_size && (line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             listOfPersons.add(new Person(line));
-            ++index;
         }
     }
 
@@ -41,15 +38,28 @@ public class Group {
         return new ArrayList<>(listOfPersons);
     }
 
-    public void remove(int index) {
-        listOfPersons.remove(index);
+    public void setGroup(List<Person> list) {
+        this.listOfPersons = list;
     }
+
+    public Group group() {
+        return this;
+    }
+
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < listOfPersons.size(); ++i) {
+            s += listOfPersons.get(i);
+            if (i != listOfPersons.size() - 1) {
+                s += ", ";
+            }
+        }
+        return s;
+    }
+
 
     public int size() {
         return listOfPersons.size();
     }
 
-    public Person get(int index) {
-        return listOfPersons.get(index);
-    }
 }

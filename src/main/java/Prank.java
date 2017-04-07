@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,11 +22,25 @@ public class Prank {
 
 
     public Person chooseVictim() {
-        int bound = group.size();
+
+        List<Person> listPeople = group.getGroup();
+
+        int bound;
         Random random = new Random();
-        int index = random.nextInt(bound);
-        Person victim = group.get(index);
-        group.remove(index);
+
+        int index;
+        while (listPeople.size() > (group.size() / group.NB_GROUP)) {
+            bound = listPeople.size();
+            index = random.nextInt(bound);
+            listPeople.remove(index);
+        }
+
+        bound = listPeople.size();
+
+        index = random.nextInt(bound);
+        Person victim = listPeople.get(index);
+        listPeople.remove(index);
+        group.setGroup(listPeople);
         return victim;
     }
 

@@ -14,15 +14,6 @@ public class MailBot {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Choose a size for a group (note : the group must be bigger than 3) : ");
-        int size = scanner.nextInt();
-
-        System.out.println();
-
-        if (size > 3) {
-            Group.group_size = size;
-        }
-
         boolean send = true;
 
         PrankManager manager = new PrankManager();

@@ -99,9 +99,9 @@ public class SmtpClient {
             feedback = reader.readLine();
             System.out.println(feedback);
 
-            writer.println("From: dante.alighieri@italia.it ");
+            writer.println("From: "+ mail.getFrom().getAddress());
             writer.flush();
-            writer.println("To: " + mail.getTo().getGroup());
+            writer.println("To: " + mail.getTo().group());
             writer.println(mail.getSubject() + System.lineSeparator());
             writer.flush();
             writer.println(mail.getBody());
