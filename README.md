@@ -11,12 +11,11 @@ To change the addresses, you can go to the package data, file victims.utf8. It m
 
 You can set the host name of the server and the port in the file SmtpServerInfo. By default, it's on localhost, port 25.
 
-The program will first ask you to choose how many people you want to have in the group. Note that there is a number set by default.
+You can set the size of each group in the Group file. Each group will contain same number of people. Note that there is a number set by default.
 
-The person who sends the e-mail is randomy chosen in the file.
+The person who sends the e-mail is randomy chosen in each group.
 
-The main class is MailBot, you can simply run it. At the end of each email send, you need to say "true" if you want to send another e-mail and "false" if you want to end the connexion.
-
+The main class is MailBot, you can simply run it. A mail will be send at each group.
 
 If you want to make your own test or you don't have friends to spam, you can install a mock server. It will intercept you mail and you can check them in your browser.
 
