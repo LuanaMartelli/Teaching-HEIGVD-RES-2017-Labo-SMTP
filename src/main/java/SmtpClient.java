@@ -31,15 +31,13 @@ public class SmtpClient {
 
         /* Welcome message */
         String feedback = reader.readLine();
-        System.out.println(feedback);
 
         /* EHLO */
         writer.println(SmtpProtocol.HELLO + " you");
         writer.flush();
 
         /* The server will send an unknow number of data with this prefix */
-        while ((feedback = reader.readLine()).contains(SmtpProtocol.ACCEPTED+"-"))
-            System.out.println(feedback);
+        while ((feedback = reader.readLine()).contains(SmtpProtocol.ACCEPTED+"-"));
 
         /* At this point, we know we reached end of data, we can start writing an email */
         if (!feedback.contains(SmtpProtocol.ACCEPTED+" ")) {
@@ -48,7 +46,6 @@ public class SmtpClient {
             writer.println(SmtpProtocol.QUIT);
             writer.flush();
         }
-        System.out.println(feedback);
     }
 
     /**
@@ -58,65 +55,65 @@ public class SmtpClient {
      */
     public void send(Prank prank) throws IOException {
 
-        Mail mail = prank.getMail();
+        Mail[] mails = prank.getMails();
 
-        String feedback;
 
-        /* MAIL FROM */
-        do {
+        for (int i = 0; i < mails.length; i++) {
+            String feedback;
+
+            /* MAIL FROM */
             writer.print(SmtpProtocol.FROM);
             writer.flush();
-            writer.println(mail.getFrom().getAddress());
+            writer.println(mails[i].getFrom().getAddress());
             writer.flush();
 
-            feedback = reader.readLine();
-            System.out.println(feedback);
-        } while (!feedback.contains(String.valueOf(SmtpProtocol.ACCEPTED)));
+            System.out.println("FROM: " + mails[i].getFrom().getAddress());
+
+            reader.readLine();
 
 
-        /* RCPT TO */
-        List<Person> to = new ArrayList<>(mail.getTo().getGroup());
+            /* RCPT TO */
+            List<Person> to = new ArrayList<>(mails[i].getTo().getGroup());
 
-        for (int i = 0; i < to.size(); ++i) {
-            writer.print(SmtpProtocol.TO);
-            writer.flush();
-            writer.println(to.get(i).getAddress());
-            writer.flush();
+            for (int j = 0; j < to.size(); ++j) {
+                writer.print(SmtpProtocol.TO);
+                writer.flush();
+                writer.println(to.get(j).getAddress());
+                writer.flush();
 
-            feedback = reader.readLine();
-            System.out.println(feedback);
+                feedback = reader.readLine();
 
-            if (!feedback.contains(String.valueOf(SmtpProtocol.ACCEPTED))) {
-                System.out.print(to.get(i).getAddress() +" was not acceped");
+                if (!feedback.contains(String.valueOf(SmtpProtocol.ACCEPTED))) {
+                    System.out.print(to.get(j).getAddress() +" was not acceped");
+                }
             }
-        }
 
-        /* DATA */
-        do {
+            System.out.println("TO: " + mails[i].getTo().group());
+
+            /* DATA */
             writer.println(SmtpProtocol.DATA);
             writer.flush();
 
-            feedback = reader.readLine();
-            System.out.println(feedback);
+            reader.readLine();
 
-            writer.println("From: "+ mail.getFrom().getAddress());
+            writer.println("From: "+ mails[i].getFrom().getAddress());
             writer.flush();
-            writer.println("To: " + mail.getTo().group());
-            writer.println(mail.getSubject() + System.lineSeparator());
+            writer.println("To: " + mails[i].getTo().group());
+            writer.println(mails[i].getSubject() + System.lineSeparator());
             writer.flush();
-            writer.println(mail.getBody());
+            writer.println(mails[i].getBody());
             writer.flush();
 
             writer.print(SmtpProtocol.END_OF_DATA);
             writer.flush();
 
-            feedback = reader.readLine();
-            System.out.println(feedback);
-        } while (!feedback.contains(String.valueOf(SmtpProtocol.ACCEPTED)));
+            reader.readLine();
+        }
+
 
     }
 
-    public void disconnect() throws IOException {
+    public void quit() throws IOException {
         /* Sanity check */
         if (socket == null || socket.isClosed()) {
             return;
@@ -125,13 +122,22 @@ public class SmtpClient {
         /* QUIT */
         writer.println(SmtpProtocol.QUIT);
         writer.flush();
-        String feedback = reader.readLine();
-        System.out.println(feedback);
+        reader.readLine();
+    }
 
+    public void close() throws IOException {
+        /* Sanity check */
+        if (socket == null || socket.isClosed()) {
+            return;
+        }
+
+        /* CLOSE */
         reader.close();
         writer.close();
         socket.close();
 
         socket = null;
+        reader = null;
+        writer = null;
     }
 }

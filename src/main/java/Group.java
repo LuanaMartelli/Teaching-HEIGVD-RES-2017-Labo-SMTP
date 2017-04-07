@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Class Group
@@ -12,9 +13,8 @@ import java.util.List;
  * People are read from a file
  */
 public class Group {
-    public static final int NB_GROUP = 1;
 
-    private List<Person> listOfPersons;
+    private final ArrayList<Person> listOfPersons;
 
     public Group() {
         listOfPersons = new ArrayList<>();
@@ -26,20 +26,31 @@ public class Group {
         }
     }
 
+
+    public  Group(List<Person> list) {
+        listOfPersons = new ArrayList<>(list);
+    }
+
     public void readFile() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("src/main/data/victims.utf8"));
         String line;
+
         while ((line = reader.readLine()) != null) {
             listOfPersons.add(new Person(line));
         }
+
+    }
+
+    public ArrayList<Person> take(int from, int to) {
+        return new ArrayList<>(listOfPersons.subList(from, to));
     }
 
     public List<Person> getGroup() {
         return new ArrayList<>(listOfPersons);
     }
 
-    public void setGroup(List<Person> list) {
-        this.listOfPersons = list;
+    public void remove(int index) {
+        listOfPersons.remove(index);
     }
 
     public Group group() {

@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * Class MailBot
@@ -12,20 +11,20 @@ public class MailBot {
 
     public static void main (String[] args) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
-
-        boolean send = true;
-
         PrankManager manager = new PrankManager();
 
-        manager.start();
+        try {
+            manager.start();
 
-        while (send) {
             manager.sendPrank();
-            System.out.print("Continue ? ");
-            send = scanner.nextBoolean();
+
+            manager.stop();
+
+        } catch (IOException e) {
+            System.err.println("Error in mail program");
+        } finally {
+            manager.close();
         }
 
-        manager.stop();
     }
 }

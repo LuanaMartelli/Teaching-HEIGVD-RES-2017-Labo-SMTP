@@ -5,51 +5,57 @@ import java.util.Random;
  * Class Prank
  *
  * This class generates a new Prank
- * This has a mail and a group
- * In a group, someone will be chosen to send the email to the others
+ * This has a mails and a superGroup
+ * In a superGroup, someone will be chosen to send the email to the others
  */
 public class Prank {
 
-    private Mail mail;
-    private Group group;
+
+    private static final int GROUP_SIZE = 3;
+    private static final int MIN_VICTIMS_PER_GROUP = 3;
+
+    private Mail[] mails;
+    private Group superGroup;
 
     public Prank() {
-        group = new Group();
-        Person victim = chooseVictim();
-        mail = new Mail(victim, group);
+        superGroup = new Group();
+
+        mails = new Mail[GROUP_SIZE];
+
+        if (superGroup.size() / GROUP_SIZE < MIN_VICTIMS_PER_GROUP) {
+            throw new IllegalArgumentException("Not enough victims !");
+        }
+
+        int length = superGroup.size() / GROUP_SIZE;
+        Group subgroup;
+        for (int i = 0; i < GROUP_SIZE - 1; ++i) {
+            subgroup = new Group(superGroup.take(i * length,(i + 1) * length));
+            Person victim = chooseSender(subgroup);
+            mails[i] = new Mail(victim, subgroup);
+        }
+
+        subgroup = new Group(superGroup.take((GROUP_SIZE - 1) * length, superGroup.size() - 1));
+        Person victim = chooseSender(subgroup);
+        mails[GROUP_SIZE - 1] = new Mail(victim, subgroup);
+
+
     }
 
 
-    public Person chooseVictim() {
+    public Person chooseSender(Group group) {
 
         List<Person> listPeople = group.getGroup();
 
-        int bound;
+        int bound = group.size();
         Random random = new Random();
-
-        int index;
-        while (listPeople.size() > (group.size() / group.NB_GROUP)) {
-            bound = listPeople.size();
-            index = random.nextInt(bound);
-            listPeople.remove(index);
-        }
-
-        if (listPeople.size() < 3) {
-            System.out.println("Not enough people in group !!!");
-            System.exit(0);
-        }
-
-        bound = listPeople.size();
-
-        index = random.nextInt(bound);
+        int index = random.nextInt(bound);
         Person victim = listPeople.get(index);
-        listPeople.remove(index);
-        group.setGroup(listPeople);
+        group.remove(index);
         return victim;
     }
 
-    public Mail getMail() {
-        return mail;
+    public Mail[] getMails() {
+        return mails;
     }
 
 

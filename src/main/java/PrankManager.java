@@ -26,7 +26,11 @@ public class PrankManager {
     }
 
     public void stop() throws IOException {
-        client.disconnect();
+        client.quit();
+    }
+
+    public void close() throws IOException {
+        client.close();
     }
 
 }
